@@ -1,10 +1,11 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
 <title>Kana Master</title>
 <style>
-  @import url('https://na01.safelinks.protection.outlook.com/?url=https%3A%2F%2Ffonts.googleapis.com%2Fcss2%3Ffamily%3DAlex%2BBrush%26family%3DNoto%2BSerif%2BJP%3Awght%40400%3B700%26family%3DDM%2BMono%3Awght%40400%3B500%26family%3DVT323%26display%3Dswap&data=05%7C02%7C%7C970a4812e91344362f2e08de91218793%7C84df9e7fe9f640afb435aaaaaaaaaaaa%7C1%7C0%7C639107770358869518%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=SAnRN0FFmf%2F%2BJr9x1QUWjb8Zd4zVwZFQi7gHv1%2BWnt8%3D&reserved=0');
+  @import url('https://fonts.googleapis.com/css2?family=Alex+Brush&family=Noto+Serif+JP:wght@400;700&family=DM+Mono:wght@400;500&family=VT323&display=swap');
 
   :root {
     --ink: #1a1a2e; --paper: #f5f0e8; --accent: #c0392b; --dim: #e5ddd0; --card-bg: #faf7f2; --border: rgba(26, 26, 46, 0.2); --title-font: 'Alex Brush', cursive; --ornament: transparent;
@@ -16,7 +17,7 @@
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'DM Mono', monospace; background: var(--paper); color: var(--ink); min-height: 100vh; transition: 0.3s; overflow-x: hidden; }
- 
+  
   .ornament { display: none; position: absolute; width: 60px; height: 60px; border: 1px solid var(--ornament); pointer-events: none; opacity: 0.4; z-index: 1; }
   [data-theme="regal"] .ornament { display: block; }
   .tl { top: 15px; left: 15px; border-right: none; border-bottom: none; }
@@ -31,20 +32,20 @@
 
   #home { padding: 100px 20px 40px; }
   .theme-toggle { position: absolute; top: 20px; right: 20px; background: var(--card-bg); border: 1px solid var(--border); color: var(--ink); padding: 6px 12px; border-radius: 8px; cursor: pointer; font-size: 0.7rem; font-weight: bold; z-index: 20; }
- 
+  
   .home-header { text-align: center; margin-bottom: 30px; }
   .home-header h1 { font-family: var(--title-font); font-size: 4rem; line-height: 1; }
 
   .sets-panel { flex: 1; overflow-y: auto; padding: 0 10px 20px; }
   .group-label { font-size: 0.65rem; letter-spacing: 2px; color: var(--ink); opacity: 0.5; text-transform: uppercase; margin: 25px 0 10px; font-weight: bold; text-align: center; }
- 
+  
   .row-item { display: flex; align-items: center; justify-content: space-between; padding: 14px; background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 8px; cursor: pointer; transition: 0.2s; }
   .row-item.selected { border-color: var(--ink); background: rgba(255, 255, 255, 0.05); }
   .set-kana { font-family: 'Noto Serif JP', serif; font-size: 1.4rem; width: 35px; }
- 
+  
   .check-circle { width: 22px; height: 22px; border-radius: 50%; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: transparent; font-weight: bold; }
   .selected .check-circle { background: var(--ink); color: var(--paper); border-color: var(--ink); }
- 
+  
   .toggle-pill { width: 42px; height: 22px; border-radius: 12px; background: var(--dim); border: 1px solid var(--border); position: relative; transition: 0.3s; }
   .toggle-pill.on { background: var(--ink); border-color: var(--ink); }
   .toggle-pill::after { content: ''; position: absolute; top: 3px; left: 3px; width: 14px; height: 14px; border-radius: 50%; background: var(--paper); transition: 0.3s; }
@@ -132,7 +133,7 @@ const DATA = {
   h_w: { n:"W-row", k:"わ", type:"h", cards:[{k:"わ",r:"wa"},{k:"を",r:"wo"},{k:"ん",r:"n"}] },
   k_v: { n:"Vowels", k:"ア", type:"k", cards:[{k:"ア",r:"a"},{k:"イ",r:"i"},{k:"ウ",r:"u"},{k:"エ",r:"e"},{k:"オ",r:"o"}] },
   k_k: { n:"K-row", k:"カ", type:"k", cards:[{k:"カ",r:"ka"},{k:"キ",r:"ki"},{k:"ク",r:"ku"},{k:"ケ",r:"ke"},{k:"コ",r:"ko"}], d:[{k:"ガ",r:"ga"},{k:"ギ",r:"gi"},{k:"グ",r:"gu"},{k:"ゲ",r:"ge"},{k:"ゴ",r:"go"}], c:[{k:"キャ",r:"kya"},{k:"キュ",r:"kyu"},{k:"キョ",r:"kyo"}], dc:[{k:"ギャ",r:"gya"},{k:"ギュ",r:"gyu"},{k:"ギョ",r:"gyo"}] },
-  k_s: { n:"S-row", k:"サ", type:"k", cards:[{k:"サ",r:"sa"},{k:"シ",r:"shi"},{k:"ス",r:"su"},{k:"セ",r:"se"},{k:"ソ",r:"so"}], d:[{k:"ザ",r:"za"},{k:"ジ",r:"ji"},{k:"ズ",r:"zu"},{k:"ぜ",r:"ze"},{k:"ぞ",r:"zo"}], c:[{k:"シャ",r:"sha"},{k:"シュ",r:"shu"},{k:"ショ",r:"sho"}], dc:[{k:"ジャ",r:"ja"},{k:"ジュ",r:"ju"},{k:"ジョ",r:"jo"}] },
+  k_s: { n:"S-row", k:"サ", type:"k", cards:[{k:"サ",r:"sa"},{k:"シ",r:"shi"},{k:"ス",r:"su"},{k:"セ",r:"se"},{k:"ソ",r:"so"}], d:[{k:"ザ",r:"za"},{k:"ジ",r:"ji"},{k:"ズ",r:"zu"},{k:"ゼ",r:"ze"},{k:"ぞ",r:"zo"}], c:[{k:"シャ",r:"sha"},{k:"シュ",r:"shu"},{k:"ショ",r:"sho"}], dc:[{k:"ジャ",r:"ja"},{k:"ジュ",r:"ju"},{k:"ジョ",r:"jo"}] },
   k_t: { n:"T-row", k:"タ", type:"k", cards:[{k:"タ",r:"ta"},{k:"チ",r:"chi"},{k:"ツ",r:"tsu"},{k:"テ",r:"te"},{k:"ト",r:"to"}], d:[{k:"ダ",r:"da"},{k:"ヂ",r:"ji"},{k:"ヅ",r:"zu"},{k:"デ",r:"de"},{k:"ド",r:"do"}], c:[{k:"チャ",r:"cha"},{k:"チュ",r:"chu"},{k:"チョ",r:"cho"}] },
   k_n: { n:"N-row", k:"ナ", type:"k", cards:[{k:"ナ",r:"na"},{k:"ニ",r:"ni"},{k:"ヌ",r:"nu"},{k:"ネ",r:"ne"},{k:"ノ",r:"no"}], c:[{k:"ニャ",r:"nya"},{k:"ニュ",r:"nyu"},{k:"ニョ",r:"nyo"}] },
   k_h: { n:"H-row", k:"ハ", type:"k", cards:[{k:"ハ",r:"ha"},{k:"ヒ",r:"hi"},{k:"フ",r:"fu"},{k:"へ",r:"he"},{k:"ホ",r:"ho"}], d:[{k:"バ",r:"ba"},{k:"ビ",r:"bi"},{k:"ブ",r:"bu"},{k:"ベ",r:"be"},{k:"ボ",r:"bo"}], p:[{k:"パ",r:"pa"},{k:"ピ",r:"pi"},{k:"プ",r:"pu"},{k:"ペ",r:"pe"},{k:"ポ",r:"po"}], c:[{k:"ヒャ",r:"hya"},{k:"ヒュ",r:"hyu"},{k:"ヒョ",r:"hyo"}], dc:[{k:"ビャ",r:"bya"},{k:"ビュ",r:"byu"},{k:"ビョ",r:"byo"}], pc:[{k:"ピャ",r:"pya"},{k:"ピュ",r:"pyu"},{k:"ピょ",r:"pya"}] },
@@ -157,9 +158,9 @@ function speak(t) {
   audioTimeout = setTimeout(() => {
     const m = new SpeechSynthesisUtterance(t);
     m.lang = 'ja-JP';
-    m.rate = 0.25;
+    m.rate = 0.25; 
     window.speechSynthesis.speak(m);
-  }, 500);
+  }, 500); 
 }
 
 function init() {
@@ -199,13 +200,20 @@ function build() {
 }
 
 function startStudy() {
-  window.speechSynthesis.speak(new SpeechSynthesisUtterance(''));
+  // Wake up speech engine for Desktop
+  window.speechSynthesis.speak(new SpeechSynthesisUtterance('')); 
+  // Fix for sliding page bug
+  window.scrollTo(0,0);
   queue = build().sort(()=>Math.random()-0.5);
   show('study'); next();
 }
 
 function next() {
-  if (!queue.length) { show('results'); return; }
+  if (!queue.length) { 
+    show('results'); 
+    window.scrollTo(0,0);
+    return; 
+  }
   const f = document.getElementById('fcard');
   f.classList.add('no-anim');
   f.classList.remove('flipped');
@@ -219,7 +227,7 @@ function next() {
 function flip() {
   const c = document.getElementById('fcard');
   const isFlipped = c.classList.contains('flipped');
- 
+  
   if (isFlipped) {
     c.classList.remove('flipped');
   } else {
@@ -254,7 +262,11 @@ function cycleTheme() {
 function toggleOption(o) { opts[o] = !opts[o]; document.getElementById('t-'+o).classList.toggle('on'); update(); }
 function toggleMute() { isMuted = !isMuted; document.getElementById('mute-btn').textContent = isMuted?'VOICE OFF':'VOICE ON'; }
 function show(id) { document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
-function goHome() { show('home'); init(); }
+function goHome() { 
+  window.scrollTo(0,0);
+  show('home'); 
+  init(); 
+}
 
 init();
 </script>
