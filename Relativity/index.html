@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Einstein's Big Adventure — An Interactive Guide to Relativity</title>
+<meta name="description" content="An interactive, animated journey through special and general relativity: the cosmic speed limit, time dilation, the twin paradox, E = mc², curved spacetime, and black holes.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚀</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#0a0010;
+  --yellow:#f5c842;
+  --red:#e8472a;
+  --blue:#3a9de8;
+  --purple:#9333ea;
+  --green:#22c55e;
+  --orange:#f97316;
+  --cream:#fff8e7;
+  --sky:#7dd3fc;
+  --pink:#f472b6;
+  --lime:#a3e635;
+}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+}
+body{background:var(--ink);font-family:'Nunito',sans-serif;color:white;overflow-x:hidden}
+
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  padding:10px 16px;
+  background:rgba(10,0,16,0.92);
+  backdrop-filter:blur(12px);
+  border-bottom:2px solid rgba(245,200,66,0.2);
+  display:flex;gap:6px;flex-wrap:wrap;align-items:center;
+}
+.nav-title{font-family:'Fredoka One',cursive;font-size:15px;color:var(--yellow);margin-right:8px;white-space:nowrap}
+.nav-btn{
+  font-family:'Fredoka One',cursive;font-size:11px;padding:5px 12px;
+  border:2px solid rgba(255,255,255,0.2);border-radius:20px;cursor:pointer;
+  background:transparent;color:rgba(255,255,255,0.6);transition:background .2s,color .2s,border-color .2s,transform .2s;white-space:nowrap;
+}
+.nav-btn:hover,.nav-btn.active{background:var(--yellow);color:var(--ink);border-color:var(--yellow);transform:translateY(-1px)}
+.nav-btn:focus-visible,.start-btn:focus-visible,.quiz-opt:focus-visible{outline:3px solid var(--sky);outline-offset:2px}
+@media (max-width:640px){
+  .nav-title{font-size:13px}
+  .nav-btn{font-size:10px;padding:4px 10px}
+}
+
+section{min-height:100vh;padding:110px 0 60px;position:relative;overflow:hidden}
+.section-inner{max-width:860px;margin:0 auto;padding:0 24px}
+
+.chap-label{font-family:'Fredoka One',cursive;font-size:11px;letter-spacing:3px;color:var(--yellow);text-transform:uppercase;margin-bottom:8px;opacity:.8}
+.chap-title{font-family:'Fredoka One',cursive;font-size:clamp(28px,5vw,52px);line-height:1.05;margin-bottom:20px;background:linear-gradient(135deg,white 0%,var(--yellow) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.chap-body{font-size:16px;line-height:1.75;color:rgba(255,255,255,0.88);margin-bottom:16px;max-width:640px}
+.chap-body strong{color:var(--yellow)}
+.chap-body em{color:var(--sky);font-style:normal;font-weight:700}
+
+.fact{background:linear-gradient(135deg,rgba(245,200,66,.12),rgba(245,200,66,.05));border:2px solid rgba(245,200,66,.4);border-radius:14px;padding:14px 18px;margin-top:20px;max-width:640px;font-size:14px;line-height:1.6;color:rgba(255,255,255,.85)}
+.fact::before{content:"⭐ ";color:var(--yellow);font-size:16px}
+.fact strong{color:var(--yellow)}
+
+.demo-wrap{background:rgba(255,255,255,.04);border:2px solid rgba(255,255,255,.1);border-radius:20px;margin:28px 0;overflow:hidden;position:relative;contain:content}
+.demo-wrap canvas{display:block;width:100%;height:auto}
+
+.controls{padding:16px 20px;background:rgba(0,0,0,.3);border-top:1px solid rgba(255,255,255,.08);display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+.ctrl-group{display:flex;flex-direction:column;gap:4px;flex:1;min-width:160px}
+.ctrl-label{font-family:'Fredoka One',cursive;font-size:12px;color:var(--yellow);letter-spacing:1px}
+.ctrl-val{font-size:11px;color:rgba(255,255,255,.6);margin-top:2px}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;background:rgba(255,255,255,.15);border-radius:3px;outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:18px;height:18px;background:var(--yellow);border-radius:50%;cursor:pointer;border:2px solid var(--ink)}
+input[type=range]::-moz-range-thumb{width:18px;height:18px;background:var(--yellow);border-radius:50%;cursor:pointer;border:2px solid var(--ink)}
+input[type=range]:focus-visible{outline:3px solid var(--sky);outline-offset:4px}
+
+#cover{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:0;text-align:center;background:radial-gradient(ellipse at 60% 40%,#1a0040 0%,#0a0010 70%)}
+#cover canvas{position:absolute;inset:0;width:100%;height:100%}
+.cover-content{position:relative;z-index:2;padding:20px}
+.cover-title{font-family:'Fredoka One',cursive;font-size:clamp(42px,9vw,96px);line-height:.95;text-shadow:0 0 60px rgba(245,200,66,.4)}
+.cover-title .line1{display:block;color:var(--yellow)}
+.cover-title .line2{display:block;color:white}
+.cover-title .line3{display:block;color:var(--red);font-size:.7em}
+.cover-sub{font-size:clamp(14px,2.5vw,20px);color:rgba(255,255,255,.6);margin:16px 0 36px;font-weight:600;letter-spacing:1px}
+.start-btn{display:inline-block;font-family:'Fredoka One',cursive;font-size:22px;padding:16px 48px;background:var(--yellow);color:var(--ink);border:none;border-radius:50px;cursor:pointer;box-shadow:0 0 40px rgba(245,200,66,.4),4px 4px 0 rgba(0,0,0,.5);transition:transform .15s,box-shadow .15s}
+.start-btn:hover{transform:translateY(-3px) scale(1.03);box-shadow:0 0 60px rgba(245,200,66,.6),4px 6px 0 rgba(0,0,0,.5)}
+
+.bg-speed{background:radial-gradient(ellipse at 30% 50%,#001030 0%,#0a0010 80%)}
+.bg-dilation{background:radial-gradient(ellipse at 70% 30%,#0d0030 0%,#0a0010 80%)}
+.bg-whytime{background:radial-gradient(ellipse at 50% 60%,#001a20 0%,#0a0010 80%)}
+.bg-machine{background:radial-gradient(ellipse at 40% 40%,#200010 0%,#0a0010 80%)}
+.bg-twins{background:radial-gradient(ellipse at 60% 50%,#100030 0%,#0a0010 80%)}
+.bg-emc2{background:radial-gradient(ellipse at 50% 30%,#1a0020 0%,#0a0010 80%)}
+.bg-gravity{background:radial-gradient(ellipse at 40% 60%,#001020 0%,#0a0010 80%)}
+.bg-gravtime{background:radial-gradient(ellipse at 60% 40%,#100020 0%,#0a0010 80%)}
+.bg-blackhole{background:radial-gradient(ellipse at 50% 50%,#0d0020 0%,#000005 80%)}
+
+.quiz-box{background:rgba(255,255,255,.05);border:2px solid rgba(255,255,255,.12);border-radius:16px;padding:20px;margin-top:24px;max-width:640px}
+.quiz-q{font-family:'Fredoka One',cursive;font-size:17px;color:var(--yellow);margin-bottom:14px}
+.quiz-opts{display:flex;flex-direction:column;gap:8px}
+.quiz-opt{background:rgba(255,255,255,.06);border:2px solid rgba(255,255,255,.1);border-radius:10px;padding:10px 16px;cursor:pointer;font-size:14px;font-weight:700;transition:background .2s,border-color .2s;text-align:left;color:white;font-family:'Nunito',sans-serif}
+.quiz-opt:hover{background:rgba(245,200,66,.15);border-color:var(--yellow)}
+.quiz-opt.correct{background:rgba(34,197,94,.2);border-color:var(--green);color:var(--lime)}
+.quiz-opt.wrong{background:rgba(232,71,42,.2);border-color:var(--red);color:#f87171}
+.quiz-opt:disabled{cursor:default}
+.quiz-opt:disabled:hover{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.1)}
+.quiz-opt.correct:disabled:hover{background:rgba(34,197,94,.2);border-color:var(--green)}
+.quiz-opt.wrong:disabled:hover{background:rgba(232,71,42,.2);border-color:var(--red)}
+.quiz-result{margin-top:12px;font-size:14px;line-height:1.6;min-height:20px;font-weight:600}
+
+.progress{position:fixed;right:16px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:8px;z-index:99}
+.prog-dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.2);cursor:pointer;transition:background .3s,transform .3s;border:none;padding:0}
+.prog-dot.active{background:var(--yellow);transform:scale(1.4)}
+@media (max-width:640px){.progress{display:none}}
+
+.finale{margin-top:40px;padding:24px;background:rgba(245,200,66,.08);border:2px solid rgba(245,200,66,.3);border-radius:16px;max-width:640px}
+.finale h3{font-family:'Fredoka One',cursive;font-size:22px;color:var(--yellow);margin-bottom:10px}
+.finale p{font-size:15px;line-height:1.7;color:rgba(255,255,255,.85);margin-bottom:10px}
+.finale .sig{font-family:'Fredoka One',cursive;font-size:14px;color:rgba(255,255,255,.4)}
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress" aria-hidden="true"></div>
+
+<nav aria-label="Chapters">
+  <span class="nav-title">🚀 Einstein's Big Adventure</span>
+  <button class="nav-btn" data-target="cover">Home</button>
+  <button class="nav-btn" data-target="speed">Speed Limit</button>
+  <button class="nav-btn" data-target="dilation">Time Dilation</button>
+  <button class="nav-btn" data-target="whytime">Why It Slows</button>
+  <button class="nav-btn" data-target="machine">Time Machine</button>
+  <button class="nav-btn" data-target="twins">Twin Paradox</button>
+  <button class="nav-btn" data-target="emc2">E = mc²</button>
+  <button class="nav-btn" data-target="gravity">Gravity</button>
+  <button class="nav-btn" data-target="gravtime">Gravity &amp; Time</button>
+  <button class="nav-btn" data-target="blackhole">Black Holes</button>
+</nav>
+<!-- COVER -->
+<section id="cover">
+  <canvas id="coverCanvas"></canvas>
+  <div class="cover-content">
+    <div class="cover-title">
+      <span class="line1">EINSTEIN'S</span>
+      <span class="line2">BIG</span>
+      <span class="line3">ADVENTURE</span>
+    </div>
+    <p class="cover-sub">An Interactive Guide to Space, Time &amp; Relativity</p>
+    <button class="start-btn" onclick="jumpTo('speed')">Begin the Journey →</button>
+  </div>
+</section>
+
+<!-- CH1: SPEED -->
+<section id="speed" class="bg-speed">
+<div class="section-inner">
+  <p class="chap-label">Chapter 1</p>
+  <h2 class="chap-title">The Universe Has a Speed Limit</h2>
+  <p class="chap-body">Imagine the fastest things you know — a cheetah at 70 mph, a jet at 600 mph, a rocket blasting to the Moon at 25,000 mph. Light makes them all look like they're standing still. Light travels at <strong>186,282 miles per second</strong> — circling the entire Earth <strong>7.5 times</strong> in one second.</p>
+  <p class="chap-body">But here's the truly wild part Einstein discovered: this isn't just a fast speed. It's the <em>absolute maximum speed for anything in the universe</em>. No matter how powerful your rocket, you can never reach light speed. It's the universe's speed limit — zero exceptions.</p>
+  <div class="demo-wrap">
+    <canvas id="speedCanvas" height="220"></canvas>
+    <div class="controls">
+      <div class="ctrl-group">
+        <span class="ctrl-label">YOUR SHIP'S SPEED</span>
+        <input type="range" id="shipSpeed" min="0" max="99.9" step="0.1" value="0">
+        <span class="ctrl-val" id="shipSpeedVal">0% of light speed</span>
+      </div>
+    </div>
+  </div>
+  <p class="chap-body">No matter how high you push that slider, light's bar is always longer. That gap never closes. You can get incredibly close to light speed, but you can never reach it — let alone pass it.</p>
+  <div class="fact">Light from the Sun takes <strong>8 minutes</strong> to reach Earth. When you look at the Sun (don't!), you're seeing it as it was 8 minutes ago. The light from distant stars is thousands of years old.</div>
+  <div class="quiz-box">
+    <p class="quiz-q">If a rocket reaches 99.9% the speed of light and you push it harder, what happens?</p>
+    <div class="quiz-opts" id="q1opts">
+      <button class="quiz-opt" onclick="quiz('q1',this,false)">It breaks the speed of light</button>
+      <button class="quiz-opt" onclick="quiz('q1',this,true)">It gets closer to c but can never reach it</button>
+      <button class="quiz-opt" onclick="quiz('q1',this,false)">Nothing happens — it's already at max</button>
+    </div>
+    <p class="quiz-result" id="q1res"></p>
+  </div>
+</div>
+</section>
+
+<!-- CH2: TIME DILATION -->
+<section id="dilation" class="bg-dilation">
+<div class="section-inner">
+  <p class="chap-label">Chapter 2</p>
+  <h2 class="chap-title">Going Fast Slows Down Time!</h2>
+  <p class="chap-body">Here is the most mind-bending discovery Einstein ever made — and it has been <em>proven true</em> with real experiments: <strong>the faster you travel, the slower time passes for you</strong> compared to someone standing still.</p>
+  <p class="chap-body">This isn't a feeling or illusion. The clocks actually tick slower. Your heart actually beats slower. You actually age more slowly. This is called <strong>time dilation</strong>. Drag the slider and watch it happen.</p>
+  <div class="demo-wrap">
+    <canvas id="dilationCanvas" height="240"></canvas>
+    <div class="controls">
+      <div class="ctrl-group">
+        <span class="ctrl-label">ROCKET SPEED</span>
+        <input type="range" id="dilSpeed" min="0" max="0.9999" step="0.0001" value="0">
+        <span class="ctrl-val" id="dilSpeedVal">v = 0% of c</span>
+      </div>
+      <div class="ctrl-group">
+        <span class="ctrl-label">LORENTZ FACTOR (γ)</span>
+        <span id="dilGamma" style="font-size:22px;font-family:'Fredoka One',cursive;color:var(--yellow)">γ = 1.00</span>
+        <span class="ctrl-val">time slows by this factor</span>
+      </div>
+    </div>
+  </div>
+  <div class="fact">GPS satellites move fast enough that their clocks run slightly slow. Engineers correct for <strong>38 microseconds per day</strong> of drift — or your navigation would be off by 7 miles daily. Relativity runs your maps.</div>
+  <div class="quiz-box">
+    <p class="quiz-q">Your friend flies to a star at 99.9% light speed. A year passes on Earth. How long did your friend experience?</p>
+    <div class="quiz-opts" id="q2opts">
+      <button class="quiz-opt" onclick="quiz('q2',this,false)">Also about a year</button>
+      <button class="quiz-opt" onclick="quiz('q2',this,true)">About 16 days</button>
+      <button class="quiz-opt" onclick="quiz('q2',this,false)">No time at all</button>
+    </div>
+    <p class="quiz-result" id="q2res"></p>
+  </div>
+</div>
+</section>
+
+<!-- CH3: WHY TIME SLOWS -->
+<section id="whytime" class="bg-whytime">
+<div class="section-inner">
+  <p class="chap-label">Chapter 3</p>
+  <h2 class="chap-title">But WHY Does Time Slow Down?</h2>
+  <p class="chap-body">OK but why? Here's the brilliant way to actually understand it. Imagine a clock that works by <strong>bouncing a laser beam between two mirrors</strong>. Each bounce is one tick.</p>
+  <p class="chap-body">When the clock is still, light goes straight up and down — short path, fast ticks. When the clock moves sideways, the light must travel a <em>longer diagonal path</em> to catch the mirror that has moved. Watch what happens below as you increase speed.</p>
+  <div class="demo-wrap">
+    <canvas id="lightClockCanvas" height="260"></canvas>
+    <div class="controls">
+      <div class="ctrl-group">
+        <span class="ctrl-label">CLOCK SPEED</span>
+        <input type="range" id="lcSpeed" min="0" max="0.95" step="0.01" value="0">
+        <span class="ctrl-val" id="lcSpeedVal">0% of c — path: 1.00×</span>
+      </div>
+    </div>
+  </div>
+  <p class="chap-body"><strong>Light always travels at exactly c.</strong> You cannot change that. So if the path is longer, each tick takes more time. The moving clock ticks more slowly. And since every process — your heartbeat, neurons firing, atoms vibrating — is a kind of clock, <em>everything</em> slows down. Time itself is dilated.</p>
+  <div class="fact">The formula: <strong>γ = 1 ÷ √(1 − v²/c²)</strong>. At 86.6% of c, γ = 2 (time runs half speed). At 99.9%, γ ≈ 22. At 99.9999%, γ ≈ 707. The closer to c, the more extreme — but you can never reach it.</div>
+</div>
+</section>
+
+<!-- CH4: TIME MACHINE -->
+<section id="machine" class="bg-machine">
+<div class="section-inner">
+  <p class="chap-label">Chapter 4</p>
+  <h2 class="chap-title">You Own a One-Way Time Machine</h2>
+  <p class="chap-body">Time dilation isn't just a weird fact. It's a <em>real, working time machine</em>. The catch? It only goes one direction: <strong>forward</strong>. The future is reachable. The past is not.</p>
+  <div class="demo-wrap">
+    <canvas id="machineCanvas" height="270"></canvas>
+    <div class="controls">
+      <div class="ctrl-group">
+        <span class="ctrl-label">SAM'S ROCKET SPEED</span>
+        <input type="range" id="machSpeed" min="0.5" max="0.9999" step="0.0001" value="0.5">
+        <span class="ctrl-val" id="machSpeedVal">50% of c</span>
+      </div>
+      <div class="ctrl-group">
+        <span class="ctrl-label">JOURNEY (Sam's felt time)</span>
+        <input type="range" id="machYears" min="1" max="20" step="1" value="5">
+        <span class="ctrl-val" id="machYearsVal">5 years felt by Sam</span>
+      </div>
+    </div>
+  </div>
+  <p class="chap-body">Sam steps off the rocket young as ever. Earth has aged far more. <strong>Sam has traveled to the future.</strong> Not metaphorically — physically. Sam's atoms experienced fewer seconds than Earth's atoms. That gap is permanent.</p>
+  <p class="chap-body">The return ticket doesn't exist. Sam can slow how fast they move through time, but cannot reverse it. <em>One way. No refunds.</em></p>
+  <div class="fact">Astronauts on the ISS return from 6-month missions having aged about <strong>0.007 seconds less</strong> than people on Earth. Tiny — but precisely measured with atomic clocks. Real time travel at a boring scale (for now).</div>
+  <div class="quiz-box">
+    <p class="quiz-q">Sam travels for 5 years of their own time at 99.9% light speed. How much time passes on Earth?</p>
+    <div class="quiz-opts" id="q3opts">
+      <button class="quiz-opt" onclick="quiz('q3',this,false)">5 years</button>
+      <button class="quiz-opt" onclick="quiz('q3',this,false)">10 years</button>
+      <button class="quiz-opt" onclick="quiz('q3',this,true)">About 112 years</button>
+    </div>
+    <p class="quiz-result" id="q3res"></p>
+  </div>
+</div>
+</section>
+
+<!-- CH5: TWINS -->
+<section id="twins" class="bg-twins">
+<div class="section-inner">
+  <p class="chap-label">Chapter 5</p>
+  <h2 class="chap-title">The Twin Paradox</h2>
+  <p class="chap-body">Twins Mira and Zara are both 10. Zara blasts off at 99% light speed, travels for what feels like 30 years, and returns. She's 40. Mira, who stayed home, is <strong>70 years old</strong>.</p>
+  <p class="chap-body">Couldn't Zara say <em>she</em> was standing still and Mira moved away? Shouldn't it be symmetric?</p>
+  <div class="demo-wrap">
+    <canvas id="twinsCanvas" height="260"></canvas>
+    <div class="controls">
+      <div class="ctrl-group">
+        <span class="ctrl-label">ZARA'S SPEED</span>
+        <input type="range" id="twinSpeed" min="0.1" max="0.999" step="0.001" value="0.99">
+        <span class="ctrl-val" id="twinSpeedVal">99% of c</span>
+      </div>
+    </div>
+  </div>
+  <p class="chap-body">The paradox dissolves: <strong>Zara had to turn around.</strong> That required real acceleration — a physical change Mira never experienced. The one who accelerates ages less. The universe knows who actually moved. This asymmetry resolves everything.</p>
+  <div class="fact">This was tested with real atomic clocks! In the 1971 Hafele–Keating experiment, clocks flown around the world came back with different times than ground clocks — exactly matching relativistic predictions.</div>
+</div>
+</section>
+
+<!-- CH6: E=MC2 -->
+<section id="emc2" class="bg-emc2">
+<div class="section-inner">
+  <p class="chap-label">Chapter 6</p>
+  <h2 class="chap-title">E = mc² — Mass is Frozen Energy</h2>
+  <p class="chap-body">Einstein's most famous equation reveals that <strong>mass and energy are the same thing in disguise</strong>. A tiny bit of mass holds a colossal amount of energy locked inside it.</p>
+  <p class="chap-body">E is energy. m is mass. c is light speed. Because c is enormous, c² is mind-boggling (~34.6 billion). Even a paperclip's mass, fully converted, releases city-powering energy.</p>
+  <div class="demo-wrap">
+    <canvas id="emc2Canvas" height="260"></canvas>
+    <div class="controls">
+      <div class="ctrl-group">
+        <span class="ctrl-label">MASS</span>
+        <input type="range" id="emc2Mass" min="0.01" max="1000" step="0.01" value="1">
+        <span class="ctrl-val" id="emc2MassVal">1 gram</span>
+      </div>
+      <div class="ctrl-group">
+        <span class="ctrl-label">ENERGY RELEASED</span>
+        <span id="emc2Energy" style="font-size:16px;font-family:'Fredoka One',cursive;color:var(--yellow)">= 21.5 kilotons TNT</span>
+      </div>
+    </div>
+  </div>
+  <div class="fact">The Sun converts <strong>4 million tons of mass into energy every second</strong> using E = mc². It has done this for 4.6 billion years and has enough fuel for 5 billion more.</div>
+  <div class="quiz-box">
+    <p class="quiz-q">A paperclip weighs about 1 gram. Fully converted to energy, what do you get?</p>
+    <div class="quiz-opts" id="q4opts">
+      <button class="quiz-opt" onclick="quiz('q4',this,false)">Enough to boil a kettle</button>
+      <button class="quiz-opt" onclick="quiz('q4',this,false)">Enough to power a house for a year</button>
+      <button class="quiz-opt" onclick="quiz('q4',this,true)">Roughly a Hiroshima-scale explosion</button>
+    </div>
+    <p class="quiz-result" id="q4res"></p>
+  </div>
+</div>
+</section>
+
+<!-- CH7: GRAVITY -->
+<section id="gravity" class="bg-gravity">
+<div class="section-inner">
+  <p class="chap-label">Chapter 7</p>
+  <h2 class="chap-title">Gravity Bends Space Itself</h2>
+  <p class="chap-body">Newton said gravity was a force. Einstein said: no — <strong>gravity is a bending of space and time itself.</strong> Mass curves the fabric of spacetime, and objects follow those curves.</p>
+  <p class="chap-body">Imagine a stretchy rubber sheet. Place a heavy ball in the middle and it sags. Marbles roll toward the dip — not because they're pulled, but because they follow the curved surface. That <em>is</em> gravity.</p>
+  <div class="demo-wrap">
+    <canvas id="gravityCanvas" height="260"></canvas>
+    <div class="controls">
+      <div class="ctrl-group">
+        <span class="ctrl-label">PLANET MASS</span>
+        <input type="range" id="gravMass" min="0" max="100" value="50">
+        <span class="ctrl-val" id="gravMassVal">Medium mass</span>
+      </div>
+    </div>
+  </div>
+  <p class="chap-body">Watch the yellow light beam bend around the planet as you increase its mass. This actually happens! In <strong>1919</strong>, Arthur Eddington measured starlight bending around the Sun during an eclipse — and it matched Einstein's prediction exactly.</p>
+  <div class="fact">Gravitational lensing lets astronomers see objects billions of light-years away that would otherwise be invisible. Massive galaxy clusters act as <strong>natural telescopes</strong> bending light from behind them.</div>
+</div>
+</section>
+
+<!-- CH8: GRAVITY TIME -->
+<section id="gravtime" class="bg-gravtime">
+<div class="section-inner">
+  <p class="chap-label">Chapter 8</p>
+  <h2 class="chap-title">Gravity Slows Time Too</h2>
+  <p class="chap-body">Speed isn't the only thing that slows time. <strong>Gravity does it too.</strong> The stronger the gravitational field you're in, the more slowly time passes for you compared to someone in weaker gravity.</p>
+  <div class="demo-wrap">
+    <canvas id="gravtimeCanvas" height="260"></canvas>
+    <div class="controls">
+      <div class="ctrl-group">
+        <span class="ctrl-label">DISTANCE FROM BLACK HOLE</span>
+        <input type="range" id="gtDist" min="1.05" max="10" step="0.05" value="8">
+        <span class="ctrl-val" id="gtDistVal">Far away — time normal</span>
+      </div>
+    </div>
+  </div>
+  <p class="chap-body">Hover just outside a black hole for one hour, and thousands of years might pass on Earth when you return. <em>Gravity is also a time machine.</em></p>
+  <p class="chap-body">Even on Earth, clocks at sea level tick <strong>slightly slower</strong> than clocks on mountaintops. The difference is ~45 microseconds per day — tiny, but perfectly real and measured.</p>
+  <div class="fact">The 2014 film <em>Interstellar</em> showed this correctly — 1 hour on Miller's Planet (near a black hole) = 7 Earth years. Science consultant Kip Thorne won the <strong>Nobel Prize in 2017</strong> for his work on gravitational waves.</div>
+</div>
+</section>
+
+<!-- CH9: BLACK HOLES -->
+<section id="blackhole" class="bg-blackhole">
+<div class="section-inner">
+  <p class="chap-label">Chapter 9</p>
+  <h2 class="chap-title">Black Holes: Where Physics Goes Wild</h2>
+  <p class="chap-body">When a massive star dies, it can collapse into an infinitely dense point — a <strong>singularity</strong>. Gravity becomes so extreme that nothing — not matter, not light — can escape past the <em>event horizon</em>.</p>
+  <div class="demo-wrap">
+    <canvas id="blackholeCanvas" height="280"></canvas>
+    <div class="controls">
+      <div class="ctrl-group">
+        <span class="ctrl-label">PULL STAR TOWARD BLACK HOLE</span>
+        <input type="range" id="bhDist" min="0" max="100" value="0">
+        <span class="ctrl-val" id="bhDistVal">Star far away — safe</span>
+      </div>
+    </div>
+  </div>
+  <p class="chap-body">At the event horizon, escape speed = c. Since nothing goes faster, nothing comes out. From outside, a perfectly black sphere ringed by a <strong>glowing accretion disk</strong> of superheated material spiraling inward.</p>
+  <p class="chap-body">A clock falling toward a black hole would appear to <em>freeze</em> at the horizon from our view — getting dimmer and redder forever. From the clock's perspective? It crosses the horizon in a moment and continues toward the singularity.</p>
+  <div class="fact">In 2019, the Event Horizon Telescope — dishes spanning the entire Earth — captured the first actual photo of a black hole: <strong>M87*</strong>, 55 million light-years away, 6.5 billion times the Sun's mass.</div>
+  <div class="quiz-box">
+    <p class="quiz-q">What happens to light that crosses a black hole's event horizon?</p>
+    <div class="quiz-opts" id="q5opts">
+      <button class="quiz-opt" onclick="quiz('q5',this,false)">It slows down and eventually escapes</button>
+      <button class="quiz-opt" onclick="quiz('q5',this,true)">It cannot escape — trapped forever</button>
+      <button class="quiz-opt" onclick="quiz('q5',this,false)">It gets converted to dark matter</button>
+    </div>
+    <p class="quiz-result" id="q5res"></p>
+  </div>
+  <div class="finale">
+    <h3>You made it, Space Explorer! 🎉</h3>
+    <p>You've just explored the most mind-bending ideas in all of physics. Einstein didn't have any special powers — just fierce, unstoppable curiosity and the willingness to follow the math wherever it led, no matter how strange.</p>
+    <p>The universe rewarded him (and us) with reality being far stranger and more beautiful than anyone had imagined. Keep asking big questions. The universe is waiting.</p>
+    <p class="sig">— Albert Einstein, 1879–1955</p>
+  </div>
+</div>
+</section>
+
+<script>
+'use strict';
+const PI = Math.PI;
+const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
+const $ = id => document.getElementById(id);
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ══════════════════════════════════════════════════
+   ANIMATION ENGINE
+   Each demo gets its own loop, but loops only run
+   while the canvas is actually on screen. Timing is
+   delta-based so speed is identical on 60Hz, 120Hz,
+   or a struggling phone.
+   ══════════════════════════════════════════════════ */
+const demos = [];
+
+function makeDemo(canvasId, opts){
+  opts = opts || {};
+  const canvas = $(canvasId);
+  /* Read the design height ONCE, before we ever touch canvas.width/height.
+     Assigning canvas.height rewrites the height attribute, so re-reading
+     the attribute on each resize doubles the canvas forever. */
+  const baseH = parseInt(canvas.getAttribute('height'), 10) || 220;
+  const d = {
+    canvas, ctx: canvas.getContext('2d'),
+    w:0, h:0, dpr:1, t:0, dt:1/60,
+    visible:false, raf:0, last:0,
+    draw:null, starCache:null,
+    fullBleed: !!opts.fullBleed
+  };
+  d.resize = function(){
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const w = canvas.offsetWidth || 600;
+    const h = d.fullBleed ? (canvas.offsetHeight || 400) : baseH;
+    /* Mobile browsers fire resize when the URL bar hides/shows while
+       scrolling. If nothing we care about changed, do nothing. */
+    if(w === d.w && h === d.h && dpr === d.dpr) return;
+    d.dpr = dpr; d.w = w; d.h = h;
+    canvas.width = Math.round(w * dpr);
+    canvas.height = Math.round(h * dpr);
+    if(!d.fullBleed) canvas.style.height = h + 'px';
+    d.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    d.starCache = null;                 // star field depends on size
+    d.renderOnce();
+  };
+  function loop(ts){
+    if(!d.visible){ d.raf = 0; return; }
+    d.dt = d.last ? clamp((ts - d.last) / 1000, 0.001, 0.05) : 1/60;
+    d.last = ts;
+    d.t += d.dt;
+    d.draw(d);
+    d.raf = requestAnimationFrame(loop);
+  }
+  d.start = function(){
+    if(reduceMotion){ d.renderOnce(); return; }   // static frame only
+    if(!d.raf){ d.last = 0; d.raf = requestAnimationFrame(loop); }
+  };
+  d.stop = function(){ if(d.raf){ cancelAnimationFrame(d.raf); d.raf = 0; } };
+  d.renderOnce = function(){ if(!d.raf && d.draw && d.w) d.draw(d); };
+  demos.push(d);
+  return d;
+}
+
+/* Pause any demo whose canvas scrolls off screen */
+const canvasObserver = new IntersectionObserver(entries => {
+  for(const e of entries){
+    const d = demos.find(x => x.canvas === e.target);
+    if(!d) continue;
+    d.visible = e.isIntersecting;
+    if(e.isIntersecting) d.start(); else d.stop();
+  }
+}, { rootMargin: '120px' });
+
+/* One debounced resize handler for every canvas */
+let resizeTimer = 0;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => demos.forEach(d => d.resize()), 150);
+});
+
+/* Star fields are deterministic, so render them once
+   to an offscreen canvas and blit each frame. */
+function drawStars(d, seed, n){
+  if(!d.starCache){
+    const oc = document.createElement('canvas');
+    oc.width = d.canvas.width; oc.height = d.canvas.height;
+    const c = oc.getContext('2d');
+    c.setTransform(d.dpr, 0, 0, d.dpr, 0, 0);
+    let s = seed;
+    const rand = () => { s = (s*1664525 + 1013904223) >>> 0; return s/4294967295; };
+    c.fillStyle = 'white';
+    for(let i=0; i<n; i++){
+      const x = rand()*d.w, y = rand()*d.h, r = rand()*1.8 + 0.3;
+      c.globalAlpha = rand()*0.7 + 0.3;
+      c.beginPath(); c.arc(x, y, r, 0, PI*2); c.fill();
+    }
+    d.starCache = oc;
+  }
+  d.ctx.drawImage(d.starCache, 0, 0, d.w, d.h);
+}
+
+/* ══════════════════════════════════════════════════
+   SHARED DRAWING HELPERS
+   ══════════════════════════════════════════════════ */
+function pill(ctx, text, cx, cy, opts){
+  opts = opts || {};
+  const size = opts.size||10, fg = opts.fg||'white', bg = opts.bg||'rgba(0,0,0,0.8)';
+  ctx.font = `bold ${size}px Nunito`;
+  const tw = ctx.measureText(text).width;
+  const pad = 5, rh = size + pad*2, rw = tw + pad*2;
+  ctx.fillStyle = bg;
+  ctx.beginPath();
+  ctx.roundRect(cx-rw/2, cy-rh+pad, rw, rh, 5);
+  ctx.fill();
+  ctx.fillStyle = fg;
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText(text, cx, cy - rh/2 + size/2 + pad);
+}
+
+function drawRocket(ctx, cx, cy, s, t){
+  t = t||0;
+  ctx.save(); ctx.translate(cx, cy);
+  const fl = 0.8 + 0.4*Math.sin(t*12);
+  const fg = ctx.createRadialGradient(0,s*2.2,0,0,s*2.2,s*fl*1.8);
+  fg.addColorStop(0,'rgba(255,220,80,0.9)'); fg.addColorStop(0.5,'rgba(249,115,22,0.7)'); fg.addColorStop(1,'transparent');
+  ctx.fillStyle=fg; ctx.beginPath(); ctx.arc(0,s*2.2,s*fl*1.8,0,PI*2); ctx.fill();
+  ctx.fillStyle='#e8472a'; ctx.strokeStyle='#1a0010'; ctx.lineWidth=s*0.06;
+  ctx.beginPath();
+  ctx.moveTo(-s*.5,-s*1.3); ctx.bezierCurveTo(-s*.55,s*.4,-s*.55,s*.8,0,s*1.2);
+  ctx.bezierCurveTo(s*.55,s*.8,s*.55,s*.4,s*.5,-s*1.3); ctx.closePath();
+  ctx.fill(); ctx.stroke();
+  ctx.fillStyle='#87ceeb';
+  ctx.beginPath(); ctx.arc(0,s*.15,s*.36,0,PI*2); ctx.fill(); ctx.stroke();
+  ctx.fillStyle='rgba(255,255,255,.5)';
+  ctx.beginPath(); ctx.arc(-s*.1,s*.05,s*.15,0,PI*2); ctx.fill();
+  [-1,1].forEach(dir=>{
+    ctx.fillStyle='#f5c842';
+    ctx.beginPath(); ctx.moveTo(dir*s*.5,s*.8); ctx.lineTo(dir*s*.95,s*1.3); ctx.lineTo(dir*s*.5,s*1.1); ctx.closePath();
+    ctx.fill(); ctx.stroke();
+  });
+  ctx.restore();
+}
+
+function drawClock(ctx, cx, cy, r, speed, t, lbl){
+  ctx.fillStyle='rgba(255,248,231,0.95)'; ctx.strokeStyle='#1a0010'; ctx.lineWidth=2;
+  ctx.beginPath(); ctx.arc(cx,cy,r,0,PI*2); ctx.fill(); ctx.stroke();
+  for(let i=0;i<12;i++){
+    const a=i/12*PI*2-PI/2;
+    ctx.strokeStyle='#555'; ctx.lineWidth=1.5;
+    ctx.beginPath();
+    ctx.moveTo(cx+(r-.06*r)*Math.cos(a),cy+(r-.06*r)*Math.sin(a));
+    ctx.lineTo(cx+(r-.18*r)*Math.cos(a),cy+(r-.18*r)*Math.sin(a));
+    ctx.stroke();
+  }
+  const ha=(t*speed*.1)%(PI*2)-PI/2;
+  ctx.strokeStyle='#1a0010'; ctx.lineWidth=3;
+  ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(cx+(r*.55)*Math.cos(ha),cy+(r*.55)*Math.sin(ha)); ctx.stroke();
+  const ma=(t*speed*.6)%(PI*2)-PI/2;
+  ctx.lineWidth=2;
+  ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(cx+(r*.75)*Math.cos(ma),cy+(r*.75)*Math.sin(ma)); ctx.stroke();
+  ctx.fillStyle='#1a0010'; ctx.beginPath(); ctx.arc(cx,cy,r*.07,0,PI*2); ctx.fill();
+  if(lbl){ ctx.fillStyle='rgba(255,255,255,0.7)'; ctx.font='bold 10px Nunito'; ctx.textAlign='center'; ctx.fillText(lbl,cx,cy+r+14); }
+}
+
+function drawPerson(ctx, cx, cy, s, opts){
+  opts = opts||{};
+  const shirt = opts.shirt||'#3a9de8', old = opts.old||false;
+  cy = cy - s*3.5;
+  ctx.fillStyle='#f5d080'; ctx.strokeStyle='#1a0010'; ctx.lineWidth=s*.06;
+  ctx.beginPath(); ctx.arc(cx,cy-s*2,s*.8,0,PI*2); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = old?'#b0b0b0':'#1a0010';
+  ctx.beginPath(); ctx.arc(cx,cy-s*2,s*.8,PI,0); ctx.fill();
+  ctx.fillStyle=shirt;
+  ctx.beginPath(); ctx.arc(cx,cy+s*.3,s*.9,0,PI*2); ctx.fill(); ctx.stroke();
+  ctx.fillStyle='#5a3010';
+  [[-.4,-.5,-.2,0],[.4,.5,.2,0]].forEach(([a,b,c,dd])=>{
+    ctx.beginPath(); ctx.moveTo(cx+a*s,cy+s*.9); ctx.lineTo(cx+b*s,cy+s*2); ctx.lineTo(cx+c*s,cy+s*2); ctx.lineTo(cx+dd*s,cy+s*.9); ctx.closePath(); ctx.fill();
+  });
+  if(old){ ctx.strokeStyle='#8b5e3c'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(cx+s*.7,cy+s*.5); ctx.lineTo(cx+s*1.2,cy+s*2.2); ctx.stroke(); }
+}
+
+/* ══════════════════════════════════════════════════
+   COVER
+   ══════════════════════════════════════════════════ */
+(function(){
+  const d = makeDemo('coverCanvas', { fullBleed:true });
+  const starData = Array.from({length:200},()=>({x:Math.random(),y:Math.random(),r:Math.random()*1.8+.3,s:Math.random()*.8+.2,p:Math.random()*PI*2}));
+  d.draw = function(d){
+    const {ctx,w,h,t} = d;
+    ctx.clearRect(0,0,w,h);
+    starData.forEach(s=>{ const op=s.s*(0.5+0.5*Math.sin(t*1.5+s.p)); ctx.fillStyle=`rgba(255,255,255,${op})`; ctx.beginPath(); ctx.arc(s.x*w,s.y*h,s.r,0,PI*2); ctx.fill(); });
+    const ng=ctx.createRadialGradient(w*.65,h*.35,10,w*.65,h*.35,w*.35);
+    ng.addColorStop(0,'rgba(80,0,180,.12)'); ng.addColorStop(1,'transparent');
+    ctx.fillStyle=ng; ctx.fillRect(0,0,w,h);
+    drawRocket(ctx,w*.5,h*.48+Math.sin(t*.6)*12,36,t);
+    ctx.font="bold 20px 'Fredoka One',cursive"; ctx.fillStyle='rgba(245,200,66,0.45)'; ctx.textAlign='center';
+    ctx.fillText('E = mc²',w*.15,h*.25+Math.sin(t*.4)*8);
+    ctx.font="bold 13px 'Fredoka One',cursive"; ctx.fillStyle='rgba(130,190,255,0.35)';
+    ctx.fillText('γ = 1/√(1−v²/c²)',w*.82,h*.3+Math.sin(t*.5+1)*6);
+  };
+})();
+
+/* ══════════════════════════════════════════════════
+   CH1: THE SPEED LIMIT
+   ══════════════════════════════════════════════════ */
+(function(){
+  const d = makeDemo('speedCanvas');
+  const sl = $('shipSpeed');
+  let v = 0, pctLabel = '0';
+  function sync(){
+    v = parseFloat(sl.value)/100;
+    pctLabel = sl.value;
+    $('shipSpeedVal').textContent = sl.value + '% of light speed';
+    d.renderOnce();
+  }
+  sl.addEventListener('input', sync);
+  const baseItems=[{name:'Cheetah',frac:.0000004,col:'#22c55e'},{name:'Jet',frac:.0000031,col:'#f97316'},{name:'Rocket',frac:.000134,col:'#e8472a'},{name:'Sound',frac:.0000038,col:'#7dd3fc'}];
+  d.draw = function(d){
+    const {ctx,w,h,t} = d;
+    ctx.clearRect(0,0,w,h); drawStars(d,3,40);
+    const all=[...baseItems,{name:'Your Ship',frac:v,col:'#a3e635'},{name:'Light!',frac:1,col:'#f5c842'}];
+    const bw=Math.max(30,Math.min(70,(w-80)/all.length-8));
+    const totalW=bw*all.length+(all.length-1)*8;
+    const sx=(w-totalW)/2;
+    const maxH=h-65;
+    all.forEach((item,i)=>{
+      const bx=sx+i*(bw+8);
+      const bh=Math.max(3,item.frac*maxH);
+      const by=h-40-bh;
+      ctx.fillStyle='rgba(0,0,0,.35)';
+      ctx.beginPath(); ctx.roundRect(bx+3,by+3,bw,bh,5); ctx.fill();
+      ctx.fillStyle=item.col;
+      ctx.beginPath(); ctx.roundRect(bx,by,bw,bh,5); ctx.fill();
+      if(item.name==='Light!'){
+        for(let j=0;j<8;j++){const a=j/8*PI*2+t;ctx.strokeStyle='rgba(245,200,66,0.6)';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(bx+bw/2+8*Math.cos(a),by-8+8*Math.sin(a));ctx.lineTo(bx+bw/2+18*Math.cos(a),by-8+18*Math.sin(a));ctx.stroke();}
+      }
+      ctx.fillStyle='white'; ctx.font=`bold ${Math.max(8,Math.min(11,bw*.16))}px Nunito`; ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillText(item.name,bx+bw/2,h-24);
+      if(item.name==='Your Ship'&&v>.001){ pill(ctx,pctLabel+'%',bx+bw/2,by-14,{size:8,fg:'#a3e635'}); }
+      if(item.name==='Light!'){ pill(ctx,'MAX!',bx+bw/2,by-14,{size:8,fg:'#1a0010',bg:'#f5c842'}); }
+    });
+  };
+  sync();
+})();
+
+/* ══════════════════════════════════════════════════
+   CH2: TIME DILATION
+   ══════════════════════════════════════════════════ */
+(function(){
+  const d = makeDemo('dilationCanvas');
+  const sl = $('dilSpeed');
+  let v = 0, g = 1;
+  function sync(){
+    v = parseFloat(sl.value);
+    g = 1/Math.sqrt(Math.max(1e-10, 1 - clamp(v,0,.9999)**2));
+    $('dilSpeedVal').textContent = `v = ${(v*100).toFixed(2)}% of c`;
+    $('dilGamma').textContent = `γ = ${g.toFixed(2)}`;
+    d.renderOnce();
+  }
+  sl.addEventListener('input', sync);
+  d.draw = function(d){
+    const {ctx,w,h,t} = d;
+    ctx.clearRect(0,0,w,h); drawStars(d,5,35);
+    const cr=clamp(h*.28,40,70), cy=h/2+10;
+    const ex=w*.25, rx=w*.75;
+    drawClock(ctx,ex,cy,cr,1,t,'EARTH CLOCK');
+    ctx.fillStyle='#22c55e'; ctx.font='bold 11px Nunito'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText('Ticking normally',ex,cy+cr+28);
+    drawClock(ctx,rx,cy,cr,1/g,t,'ROCKET CLOCK');
+    ctx.fillStyle=v>.05?'#f5c842':'rgba(255,255,255,.5)'; ctx.font='bold 11px Nunito';
+    const pct=((1-1/g)*100).toFixed(1);
+    ctx.fillText(v>.01?`${pct}% slower`:'Same speed as Earth',rx,cy+cr+28);
+    drawRocket(ctx,w/2,cy-cr*.3,cr*.45,t);
+    for(let i=0;i<5;i++){const ly=cy-cr*.5+i*14;ctx.strokeStyle=`rgba(163,230,53,${.3+v*.6})`;ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(w/2-45-60*v,ly);ctx.lineTo(w/2-45,ly);ctx.stroke();}
+    ctx.fillStyle='rgba(255,255,255,.25)'; ctx.font=`bold 20px 'Fredoka One',cursive`; ctx.textAlign='center';
+    ctx.fillText('VS',w/2,cy+8);
+  };
+  sync();
+})();
+
+/* ══════════════════════════════════════════════════
+   CH3: THE LIGHT CLOCK (why time slows)
+   ══════════════════════════════════════════════════ */
+(function(){
+  const d = makeDemo('lightClockCanvas');
+  const sl = $('lcSpeed');
+  let v = 0, pathLen = 1, ph1 = 0, ph2 = 0;
+  function sync(){
+    v = parseFloat(sl.value);
+    pathLen = Math.sqrt(1 + v*v/(1 - v*v));
+    $('lcSpeedVal').textContent = `${(v*100).toFixed(0)}% of c — path length: ${pathLen.toFixed(2)}x`;
+    d.renderOnce();
+  }
+  sl.addEventListener('input', sync);
+  d.draw = function(d){
+    const {ctx,w,h} = d;
+    ctx.clearRect(0,0,w,h); drawStars(d,8,25);
+    const mh=h*.7, mw=clamp(w*.12,36,60), ly=h*.1, lx=w*.22, rx=w*.7;
+    // Left clock mirrors
+    ctx.fillStyle='#aaa'; ctx.strokeStyle='#1a0010'; ctx.lineWidth=1.5;
+    ctx.fillRect(lx-mw/2,ly,mw,8); ctx.strokeRect(lx-mw/2,ly,mw,8);
+    ctx.fillRect(lx-mw/2,ly+mh,mw,8); ctx.strokeRect(lx-mw/2,ly+mh,mw,8);
+    ctx.strokeStyle='rgba(245,200,66,.2)'; ctx.lineWidth=2; ctx.setLineDash([6,4]);
+    ctx.beginPath(); ctx.moveTo(lx,ly+8); ctx.lineTo(lx,ly+mh); ctx.stroke(); ctx.setLineDash([]);
+    const py1=ly+8+(mh-8)*(0.5+0.5*Math.sin(ph1));
+    const pg1=ctx.createRadialGradient(lx,py1,0,lx,py1,18); pg1.addColorStop(0,'rgba(245,200,66,.4)'); pg1.addColorStop(1,'transparent');
+    ctx.fillStyle=pg1; ctx.beginPath(); ctx.arc(lx,py1,18,0,PI*2); ctx.fill();
+    ctx.fillStyle='#f5c842'; ctx.strokeStyle='#1a0010'; ctx.lineWidth=1.5;
+    ctx.beginPath(); ctx.arc(lx,py1,7,0,PI*2); ctx.fill(); ctx.stroke();
+    pill(ctx,'STATIONARY CLOCK',lx,ly+mh+22,{fg:'#f5c842',size:9});
+    pill(ctx,'Short path = FAST ticks',lx,ly+mh+36,{fg:'white',size:8});
+    pill(ctx,'MIRROR',lx,ly-6,{fg:'white',size:7});
+    // Right clock mirrors (moving)
+    const offset=v*100, t2=0.5+0.5*Math.sin(ph2);
+    const mirX=rx+offset*t2;
+    ctx.fillStyle='#aaa'; ctx.strokeStyle='#1a0010'; ctx.lineWidth=1.5;
+    ctx.fillRect(mirX-mw/2,ly,mw,8); ctx.strokeRect(mirX-mw/2,ly,mw,8);
+    ctx.fillRect(rx-mw/2,ly+mh,mw,8); ctx.strokeRect(rx-mw/2,ly+mh,mw,8);
+    const px2=rx+(mirX-rx)*t2, py2=ly+8+(mh-8)*t2;
+    ctx.strokeStyle='rgba(249,115,22,.25)'; ctx.setLineDash([6,4]);
+    ctx.beginPath(); ctx.moveTo(rx,ly+mh); ctx.lineTo(mirX,ly+8); ctx.stroke(); ctx.setLineDash([]);
+    const pg2=ctx.createRadialGradient(px2,py2,0,px2,py2,18); pg2.addColorStop(0,'rgba(249,115,22,.4)'); pg2.addColorStop(1,'transparent');
+    ctx.fillStyle=pg2; ctx.beginPath(); ctx.arc(px2,py2,18,0,PI*2); ctx.fill();
+    ctx.fillStyle='#f97316'; ctx.strokeStyle='#1a0010'; ctx.lineWidth=1.5;
+    ctx.beginPath(); ctx.arc(px2,py2,7,0,PI*2); ctx.fill(); ctx.stroke();
+    pill(ctx,'MOVING CLOCK',rx+offset*.5,ly+mh+22,{fg:'#f97316',size:9});
+    pill(ctx,`Longer path = ${pathLen.toFixed(2)}x SLOWER`,rx+offset*.5,ly+mh+36,{fg:'white',size:8});
+    // Key insight box
+    const kx=w*.47, kw=clamp(w*.33,120,180);
+    ctx.fillStyle='rgba(147,51,234,.15)'; ctx.strokeStyle='rgba(147,51,234,.5)'; ctx.lineWidth=1.5;
+    ctx.beginPath(); ctx.roundRect(kx,h*.08,kw,h*.35,8); ctx.fill(); ctx.stroke();
+    const kcx=kx+kw/2;
+    pill(ctx,'KEY RULE:',kcx,h*.16,{fg:'#9333ea',size:9});
+    pill(ctx,'Light always = c',kcx,h*.24,{fg:'white',size:8});
+    pill(ctx,'Longer path = more time',kcx,h*.31,{fg:'white',size:8});
+    pill(ctx,'Moving clocks go SLOW!',kcx,h*.39,{fg:'#f5c842',size:9});
+    ctx.fillStyle='rgba(255,255,255,.2)'; ctx.font=`bold 16px 'Fredoka One',cursive`; ctx.textAlign='center';
+    ctx.fillText('VS',w*.45,h*.5);
+    ph1=(ph1+1.08*d.dt)%(PI*2);
+    ph2=(ph2+1.08*d.dt/pathLen)%(PI*2);
+  };
+  sync();
+})();
+
+/* ══════════════════════════════════════════════════
+   CH4: THE ONE-WAY TIME MACHINE
+   ══════════════════════════════════════════════════ */
+(function(){
+  const d = makeDemo('machineCanvas');
+  const slV = $('machSpeed'), slY = $('machYears');
+  let v = .5, yrs = 5, g = 1, earthYrs = '5.0';
+  function sync(){
+    v = parseFloat(slV.value);
+    yrs = parseInt(slY.value, 10);
+    g = 1/Math.sqrt(Math.max(1e-10, 1 - v*v));
+    earthYrs = (yrs*g).toFixed(1);
+    $('machSpeedVal').textContent = `${(v*100).toFixed(2)}% of c`;
+    $('machYearsVal').textContent = `${yrs} year${yrs>1?'s':''} felt by Sam`;
+    d.renderOnce();
+  }
+  slV.addEventListener('input', sync);
+  slY.addEventListener('input', sync);
+  d.draw = function(d){
+    const {ctx,w,h,t} = d;
+    ctx.clearRect(0,0,w,h); drawStars(d,2,50);
+    const tly=h*.8, tx0=50, tx1=w-50;
+    ctx.strokeStyle='rgba(245,200,66,.5)'; ctx.lineWidth=2.5;
+    ctx.beginPath(); ctx.moveTo(tx0,tly); ctx.lineTo(tx1-12,tly); ctx.stroke();
+    ctx.fillStyle='#f5c842'; ctx.beginPath(); ctx.moveTo(tx1,tly); ctx.lineTo(tx1-10,tly-5); ctx.lineTo(tx1-10,tly+5); ctx.closePath(); ctx.fill();
+    [2025,2035,2050,2075,2100].forEach(yr=>{
+      const frac=(yr-2025)/75, tx=tx0+frac*(tx1-tx0-12);
+      ctx.strokeStyle='rgba(255,255,255,.3)'; ctx.lineWidth=1;
+      ctx.beginPath(); ctx.moveTo(tx,tly-5); ctx.lineTo(tx,tly+5); ctx.stroke();
+      ctx.fillStyle='rgba(255,255,255,.4)'; ctx.font='8px Nunito'; ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillText(yr,tx,tly+14);
+    });
+    const samEndFrac=Math.min(0.92,yrs*g/75);
+    const samEndX=tx0+samEndFrac*(tx1-tx0-12);
+    const arcH=h*.38;
+    ctx.strokeStyle='rgba(232,71,42,.75)'; ctx.lineWidth=2; ctx.setLineDash([8,4]);
+    ctx.beginPath(); ctx.moveTo(tx0,tly);
+    ctx.bezierCurveTo(tx0+60,tly-arcH,samEndX-60,tly-arcH,samEndX,tly); ctx.stroke(); ctx.setLineDash([]);
+    const arcT=0.5+0.5*Math.sin(t*.35);
+    const rax=tx0+(samEndX-tx0)*arcT;
+    const ray=tly-arcH*Math.sin(arcT*PI);
+    drawRocket(ctx,rax,ray,16,t);
+    drawPerson(ctx,tx0,tly,20,{shirt:'#3a9de8',old:false});
+    drawPerson(ctx,samEndX,tly,20,{shirt:'#22c55e',old:true});
+    pill(ctx,'SAM (leaves, age 20)',tx0,tly-22,{fg:'#e8472a',size:9});
+    pill(ctx,`SAM (returns, age ${20+yrs})`,samEndX,tly-22,{fg:'#f97316',size:9});
+    pill(ctx,`Alex on Earth: ${earthYrs} years pass`,w*.5,tly+30,{fg:'#22c55e',size:10});
+    ctx.fillStyle='rgba(127,0,0,.75)'; ctx.strokeStyle='#e8472a'; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.roundRect(w*.5-85,h*.1-12,170,24,7); ctx.fill(); ctx.stroke();
+    ctx.fillStyle='white'; ctx.font='bold 11px Nunito'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText('⛔ ONE WAY — NO RETURN TICKET',w*.5,h*.1);
+  };
+  sync();
+})();
+
+/* ══════════════════════════════════════════════════
+   CH5: THE TWIN PARADOX
+   ══════════════════════════════════════════════════ */
+(function(){
+  const d = makeDemo('twinsCanvas');
+  const sl = $('twinSpeed');
+  let v = .99, g = 1, zaraAge = 40;
+  function sync(){
+    v = parseFloat(sl.value);
+    g = 1/Math.sqrt(Math.max(1e-10, 1 - v*v));
+    zaraAge = Math.round(10 + 60/g);
+    $('twinSpeedVal').textContent = `${(v*100).toFixed(1)}% of c`;
+    d.renderOnce();
+  }
+  sl.addEventListener('input', sync);
+  d.draw = function(d){
+    const {ctx,w,h,t} = d;
+    ctx.clearRect(0,0,w,h); drawStars(d,6,45);
+    ctx.strokeStyle='rgba(245,200,66,.25)'; ctx.lineWidth=2; ctx.setLineDash([8,5]);
+    ctx.beginPath(); ctx.moveTo(w/2,20); ctx.lineTo(w/2,h-20); ctx.stroke(); ctx.setLineDash([]);
+    // Mira
+    ctx.fillStyle='rgba(30,74,46,.6)'; ctx.fillRect(0,h-62,w/2-6,62);
+    ctx.fillStyle='#22c55e'; ctx.fillRect(0,h-66,w/2-6,4);
+    drawPerson(ctx,w*.25,h-62,28,{shirt:'#5d4037',old:true});
+    drawClock(ctx,w*.25+60,h*.44,28,1,t);
+    pill(ctx,'MIRA',w*.25,h*.18,{fg:'#f5c842',size:13});
+    pill(ctx,'Stayed on Earth',w*.25,h*.25,{fg:'white',size:9});
+    pill(ctx,'Age: 70',w*.25,h*.31,{fg:'#e8472a',size:10});
+    pill(ctx,'Clock: FAST',w*.25+60,h*.55,{fg:'#a3e635',size:8});
+    // Zara
+    drawRocket(ctx,w*.75,h*.44,30,t);
+    drawPerson(ctx,w*.75-60,h-62,28,{shirt:'#9333ea',old:false});
+    drawClock(ctx,w*.75-90,h*.44,28,1/g,t);
+    pill(ctx,'ZARA',w*.75,h*.18,{fg:'#f5c842',size:13});
+    pill(ctx,'Flew to a star',w*.75,h*.25,{fg:'white',size:9});
+    pill(ctx,`Age: ${zaraAge}`,w*.75,h*.31,{fg:'#a3e635',size:10});
+    pill(ctx,'Clock: SLOW',w*.75-90,h*.55,{fg:'#f5c842',size:8});
+    ctx.fillStyle='#e8472a'; ctx.font=`bold 26px 'Fredoka One',cursive`; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText('VS',w/2,h*.44);
+    pill(ctx,'Same birthday — different ages!',w/2,h*.12,{fg:'#1a0010',bg:'#f5c842',size:10});
+    pill(ctx,'Zara ACCELERATED to turn around — that breaks the symmetry',w/2,h*.06,{fg:'white',bg:'rgba(147,51,234,.8)',size:8});
+  };
+  sync();
+})();
+
+/* ══════════════════════════════════════════════════
+   CH6: E = mc²
+   ══════════════════════════════════════════════════ */
+(function(){
+  const d = makeDemo('emc2Canvas');
+  const sl = $('emc2Mass');
+  let E = 8.988e13;
+  const particles = [];
+  const MAX_PARTICLES = 120;
+  function formatE(J){ if(J>4.184e15) return `${(J/4.184e15).toFixed(1)} megatons TNT`; if(J>4.184e12) return `${(J/4.184e12).toFixed(1)} kilotons TNT`; if(J>1e9) return `${(J/1e9).toFixed(1)} GJ`; return `${J.toExponential(2)} J`; }
+  function sync(){
+    const disp = parseFloat(sl.value);
+    E = (disp/1000) * 8.988e16;
+    $('emc2MassVal').textContent = disp<1?`${(disp*1000).toFixed(0)} mg`:disp<1000?`${disp.toFixed(1)} g`:`${(disp/1000).toFixed(2)} kg`;
+    $('emc2Energy').textContent = '= ' + formatE(E);
+    d.renderOnce();
+  }
+  sl.addEventListener('input', sync);
+  d.draw = function(d){
+    const {ctx,w,h,t,dt} = d;
+    ctx.clearRect(0,0,w,h); drawStars(d,4,30);
+    const ax=w*.35, ay=h*.5;
+    const ng=ctx.createRadialGradient(ax,ay,5,ax,ay,80); ng.addColorStop(0,'rgba(147,51,234,.3)'); ng.addColorStop(1,'transparent');
+    ctx.fillStyle=ng; ctx.beginPath(); ctx.arc(ax,ay,80,0,PI*2); ctx.fill();
+    [[70,28,t*.7,'#3a9de8'],[55,45,-t*.5+1,'#e8472a'],[78,20,t*.9+2,'#22c55e']].forEach(([rx,ry,angle,col])=>{
+      ctx.save(); ctx.translate(ax,ay); ctx.rotate(angle);
+      ctx.strokeStyle=col+'55'; ctx.lineWidth=1.5; ctx.setLineDash([4,3]);
+      ctx.beginPath(); ctx.ellipse(0,0,rx,ry,0,0,PI*2); ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle=col; ctx.strokeStyle='#1a0010'; ctx.lineWidth=1.5;
+      ctx.beginPath(); ctx.arc(rx,0,7,0,PI*2); ctx.fill(); ctx.stroke();
+      ctx.restore();
+    });
+    ctx.fillStyle='#f97316'; ctx.strokeStyle='#1a0010'; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.arc(ax,ay,22,0,PI*2); ctx.fill(); ctx.stroke();
+    ctx.fillStyle='#e8472a'; ctx.beginPath(); ctx.arc(ax-7,ay+4,12,0,PI*2); ctx.fill(); ctx.stroke();
+    ctx.fillStyle='#f97316'; ctx.beginPath(); ctx.arc(ax+7,ay-4,12,0,PI*2); ctx.fill(); ctx.stroke();
+    ctx.fillStyle='#f5c842'; ctx.font=`bold ${clamp(w*.075,20,40)}px 'Fredoka One',cursive`; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText('E = mc²',w*.72,h*.38);
+    ctx.fillStyle='rgba(255,255,255,.55)'; ctx.font='12px Nunito';
+    ctx.fillText('Energy = Mass × (speed of light)²',w*.72,h*.5);
+    const frac=Math.min(1,Math.log10(Math.max(1,E/1e12))/8);
+    const exR=8+frac*clamp(w*.16,35,70);
+    const exX=w*.72, exY=h*.74;
+    const eg=ctx.createRadialGradient(exX,exY,0,exX,exY,exR*1.9); eg.addColorStop(0,'rgba(245,200,66,.6)'); eg.addColorStop(.5,'rgba(249,115,22,.3)'); eg.addColorStop(1,'transparent');
+    ctx.fillStyle=eg; ctx.beginPath(); ctx.arc(exX,exY,exR*1.9,0,PI*2); ctx.fill();
+    ctx.fillStyle='rgba(232,71,42,.9)'; ctx.beginPath(); ctx.arc(exX,exY,exR,0,PI*2); ctx.fill();
+    ctx.fillStyle='rgba(245,200,66,.95)'; ctx.beginPath(); ctx.arc(exX,exY,exR*.5,0,PI*2); ctx.fill();
+    // Particle sparks — spawn rate and motion scaled by dt so speed is
+    // identical on any refresh rate.
+    if(particles.length<MAX_PARTICLES && Math.random()<7.2*dt){
+      const a=Math.random()*PI*2, sp=1+Math.random()*3;
+      particles.push({x:exX,y:exY,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,life:1,col:['#f5c842','#f97316','#e8472a','white'][Math.floor(Math.random()*4)],size:2+Math.random()*5});
+    }
+    const step=dt*60;
+    for(let i=particles.length-1;i>=0;i--){
+      const p=particles[i];
+      p.x+=p.vx*step; p.y+=p.vy*step; p.life-=.02*step; p.vy+=.04*step;
+      if(p.life<=0){particles.splice(i,1);continue;}
+      ctx.globalAlpha=p.life; ctx.fillStyle=p.col;
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.size*p.life,0,PI*2); ctx.fill();
+    }
+    ctx.globalAlpha=1;
+    pill(ctx,formatE(E),exX,exY+exR+20,{fg:'#f5c842',size:10});
+  };
+  sync();
+})();
+
+/* ══════════════════════════════════════════════════
+   CH7: GRAVITY BENDS SPACE
+   ══════════════════════════════════════════════════ */
+(function(){
+  const d = makeDemo('gravityCanvas');
+  const sl = $('gravMass');
+  let mass = .5;
+  function sync(){
+    mass = parseFloat(sl.value)/100;
+    $('gravMassVal').textContent = ['No mass','Tiny mass','Light mass','Medium mass','Heavy mass','Very heavy','Extreme mass!'][Math.round(mass*6)];
+    d.renderOnce();
+  }
+  sl.addEventListener('input', sync);
+  d.draw = function(d){
+    const {ctx,w,h,t} = d;
+    ctx.clearRect(0,0,w,h); drawStars(d,7,40);
+    const cx=w/2, cy=h*.53, pr=18+mass*44;
+    const cols=14, rows=9;
+    function warp(gx,gy){ const dx=gx-cx,dy=gy-cy,dist=Math.sqrt(dx*dx+dy*dy); if(dist<2)return[gx,gy]; const w2=mass*1900/(dist+pr*.9); return[gx-dx/dist*w2,gy-dy/dist*w2]; }
+    ctx.strokeStyle='rgba(58,157,232,.45)'; ctx.lineWidth=1.2;
+    for(let r=0;r<=rows;r++){ ctx.beginPath(); for(let c=0;c<=cols;c++){ const [px,py]=warp(c*w/cols,r*(h*.88)/rows+h*.05); c===0?ctx.moveTo(px,py):ctx.lineTo(px,py); } ctx.stroke(); }
+    for(let c=0;c<=cols;c++){ ctx.beginPath(); for(let r=0;r<=rows;r++){ const [px,py]=warp(c*w/cols,r*(h*.88)/rows+h*.05); r===0?ctx.moveTo(px,py):ctx.lineTo(px,py); } ctx.stroke(); }
+    const ppg=ctx.createRadialGradient(cx,cy,0,cx,cy,pr); ppg.addColorStop(0,'#f5d080'); ppg.addColorStop(.5,'#f97316'); ppg.addColorStop(1,'#c8382a');
+    ctx.fillStyle=ppg; ctx.strokeStyle='#1a0010'; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.arc(cx,cy,pr,0,PI*2); ctx.fill(); ctx.stroke();
+    ctx.fillStyle='rgba(0,0,0,.2)'; ctx.beginPath(); ctx.arc(cx-pr*.3,cy+pr*.2,pr*.28,0,PI*2); ctx.fill();
+    pill(ctx,mass>.3?'Massive Object':'Small Object',cx,cy+pr+14,{fg:'white',size:9});
+    const rayY=h*.22, bend=mass*1.8;
+    ctx.strokeStyle='rgba(245,200,66,.9)'; ctx.lineWidth=2.5; ctx.setLineDash([10,5]);
+    ctx.beginPath();
+    for(let i=0;i<=80;i++){ const x=38+i*(w-76)/80,dx=x-cx,dy=rayY-cy,dist=Math.sqrt(dx*dx+dy*dy),pull=dist>pr?bend*pr*pr/(dist*dist*dist)*dy*.26:0,y=rayY+pull*(1-Math.abs(dx/(w*.5))); i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); } ctx.stroke(); ctx.setLineDash([]);
+    const pxp=38+(w-76)*((t*.07)%1),pdx=pxp-cx,pdy=rayY-cy,pd=Math.sqrt(pdx*pdx+pdy*pdy),ppull=pd>pr?bend*pr*pr/(pd*pd*pd)*pdy*.26:0,pyp=rayY+ppull*(1-Math.abs(pdx/(w*.5)));
+    const lpg2=ctx.createRadialGradient(pxp,pyp,0,pxp,pyp,16); lpg2.addColorStop(0,'rgba(245,200,66,.4)'); lpg2.addColorStop(1,'transparent');
+    ctx.fillStyle=lpg2; ctx.beginPath(); ctx.arc(pxp,pyp,16,0,PI*2); ctx.fill();
+    ctx.fillStyle='#f5c842'; ctx.strokeStyle='#1a0010'; ctx.lineWidth=1.5;
+    ctx.beginPath(); ctx.arc(pxp,pyp,7,0,PI*2); ctx.fill(); ctx.stroke();
+    ctx.strokeStyle='rgba(255,255,255,.12)'; ctx.lineWidth=1; ctx.setLineDash([4,4]);
+    ctx.beginPath(); ctx.moveTo(38,rayY); ctx.lineTo(w-38,rayY); ctx.stroke(); ctx.setLineDash([]);
+    pill(ctx,'Light beam — bends around mass',w*.5,rayY-14,{fg:'rgba(245,200,66,.75)',size:9});
+    pill(ctx,'Straight path without gravity',w*.5,rayY+10,{fg:'rgba(255,255,255,.3)',size:8});
+  };
+  sync();
+})();
+
+/* ══════════════════════════════════════════════════
+   CH8: GRAVITY SLOWS TIME
+   ══════════════════════════════════════════════════ */
+(function(){
+  const d = makeDemo('gravtimeCanvas');
+  const sl = $('gtDist');
+  let dist = 8, tff = 1;
+  function sync(){
+    dist = parseFloat(sl.value);
+    tff = Math.sqrt(Math.max(0, 1 - 1/dist));
+    const pct = ((1-tff)*100).toFixed(2);
+    $('gtDistVal').textContent = dist>7?'Far away — time nearly normal':dist>3?`Closer — time ${pct}% slower`:`Very close! Time ${pct}% slower!`;
+    d.renderOnce();
+  }
+  sl.addEventListener('input', sync);
+  d.draw = function(d){
+    const {ctx,w,h,t} = d;
+    ctx.clearRect(0,0,w,h); drawStars(d,9,40);
+    const bhX=w*.82, bhY=h*.5, bhR=40;
+    [{r:bhR*2.8,c:'rgba(249,115,22,.08)'},{r:bhR*2.2,c:'rgba(249,115,22,.15)'},{r:bhR*1.7,c:'rgba(245,200,66,.2)'},{r:bhR*1.4,c:'rgba(245,200,66,.28)'}].forEach(({r,c})=>{ ctx.fillStyle=c; ctx.beginPath(); ctx.arc(bhX,bhY,r,0,PI*2); ctx.fill(); });
+    ctx.fillStyle='#f97316'; ctx.beginPath(); ctx.ellipse(bhX,bhY,bhR*1.8,bhR*.28,0,0,PI*2); ctx.fill();
+    ctx.fillStyle='#f5c842'; ctx.beginPath(); ctx.ellipse(bhX,bhY,bhR*1.35,bhR*.18,0,0,PI*2); ctx.fill();
+    ctx.fillStyle='#000'; ctx.beginPath(); ctx.arc(bhX,bhY,bhR,0,PI*2); ctx.fill();
+    ctx.strokeStyle='rgba(147,51,234,.8)'; ctx.lineWidth=2; ctx.beginPath(); ctx.arc(bhX,bhY,bhR,0,PI*2); ctx.stroke();
+    pill(ctx,'BLACK HOLE',bhX,bhY+bhR+14,{fg:'#9333ea',size:9});
+    const minX=60, maxX=bhX-bhR-55, frac=1-(dist-1.05)/(10-1.05);
+    const px=minX+(maxX-minX)*frac, py=h*.58;
+    drawPerson(ctx,px,py,22,{shirt:'#3a9de8',old:false});
+    drawClock(ctx,px,py-50,24,tff,t);
+    pill(ctx,`Time: ${(tff*100).toFixed(1)}% of normal`,px,py-82,{fg:tff<.6?'#f5c842':'white',size:9});
+    const barX0=minX-10, barX1=maxX+10, barY=h*.9;
+    const bgrad=ctx.createLinearGradient(barX0,0,barX1,0); bgrad.addColorStop(0,'#22c55e'); bgrad.addColorStop(1,'#e8472a');
+    ctx.fillStyle=bgrad; ctx.fillRect(barX0,barY,barX1-barX0,6);
+    ctx.fillStyle='white'; ctx.strokeStyle='#1a0010'; ctx.lineWidth=1.5;
+    ctx.beginPath(); ctx.arc(px,barY+3,5,0,PI*2); ctx.fill(); ctx.stroke();
+    pill(ctx,'Normal time',barX0+40,barY+18,{fg:'#22c55e',size:8});
+    pill(ctx,'Time nearly frozen!',barX1-50,barY+18,{fg:'#e8472a',size:8});
+  };
+  sync();
+})();
+
+/* ══════════════════════════════════════════════════
+   CH9: BLACK HOLES
+   ══════════════════════════════════════════════════ */
+(function(){
+  const d = makeDemo('blackholeCanvas');
+  const sl = $('bhDist');
+  let pull = 0;
+  function sync(){
+    pull = parseFloat(sl.value)/100;
+    $('bhDistVal').textContent = pull<.2?'Star far away — safe':pull<.5?'Getting closer — tidal forces growing!':pull<.8?'WARNING: spaghettification starting!':'POINT OF NO RETURN!';
+    d.renderOnce();
+  }
+  sl.addEventListener('input', sync);
+  d.draw = function(d){
+    const {ctx,w,h,t} = d;
+    ctx.clearRect(0,0,w,h); drawStars(d,11,60);
+    const bhX=w*.58, bhY=h*.5, bhR=clamp(h*.14,38,58);
+    [{r:bhR*3,c:'rgba(249,115,22,.08)'},{r:bhR*2.4,c:'rgba(249,115,22,.16)'},{r:bhR*1.9,c:'rgba(245,200,66,.22)'},{r:bhR*1.5,c:'rgba(245,200,66,.32)'}].forEach(({r,c})=>{ ctx.fillStyle=c; ctx.beginPath(); ctx.arc(bhX,bhY,r,0,PI*2); ctx.fill(); });
+    const dt2=t*.4;
+    [[bhR*1.2,bhR*.18,'rgba(249,115,22,.7)'],[bhR*1.55,bhR*.15,'rgba(245,200,66,.55)'],[bhR*1.9,bhR*.12,'rgba(232,71,42,.45)']].forEach(([rx,ry,col])=>{ ctx.save(); ctx.translate(bhX,bhY); ctx.rotate(dt2); ctx.fillStyle=col; ctx.beginPath(); ctx.ellipse(0,0,rx,ry,0,0,PI*2); ctx.fill(); ctx.restore(); });
+    ctx.fillStyle='#000'; ctx.beginPath(); ctx.arc(bhX,bhY,bhR,0,PI*2); ctx.fill();
+    ctx.strokeStyle='rgba(147,51,234,.9)'; ctx.lineWidth=2.5; ctx.beginPath(); ctx.arc(bhX,bhY,bhR,0,PI*2); ctx.stroke();
+    pill(ctx,'EVENT HORIZON',bhX,bhY+bhR+14,{fg:'#9333ea',size:9});
+    const jl=bhR*2.2;
+    [1,-1].forEach(dir=>{ const jg=ctx.createLinearGradient(bhX,bhY,bhX,bhY+dir*jl); jg.addColorStop(0,'rgba(245,200,66,.85)'); jg.addColorStop(1,'transparent'); ctx.strokeStyle=jg; ctx.lineWidth=4; ctx.beginPath(); ctx.moveTo(bhX,bhY+dir*bhR); ctx.lineTo(bhX,bhY+dir*(bhR+jl)); ctx.stroke(); });
+    const starBaseX=w*.1, stX=starBaseX+pull*(bhX-bhR-starBaseX-18), stY=h*.4+(bhY-h*.4)*pull*.65;
+    const stR=clamp(15-pull*11,2,15), stretch=1+pull*3.5;
+    ctx.save(); ctx.translate(stX,stY); ctx.scale(1/stretch,stretch);
+    const sg=ctx.createRadialGradient(0,0,0,0,0,stR*stretch); sg.addColorStop(0,'white'); sg.addColorStop(.4,'#87ceeb'); sg.addColorStop(1,'transparent');
+    ctx.fillStyle=sg; ctx.beginPath(); ctx.arc(0,0,stR*stretch,0,PI*2); ctx.fill(); ctx.restore();
+    if(pull>.08){ ctx.strokeStyle=`rgba(58,157,232,${pull*.55})`; ctx.lineWidth=pull*2.5; ctx.setLineDash([5,4]); ctx.beginPath(); ctx.moveTo(stX+stR/stretch,stY); ctx.bezierCurveTo(stX+55,stY,bhX-bhR-35,bhY,bhX-bhR,bhY); ctx.stroke(); ctx.setLineDash([]); }
+    pill(ctx,pull<.25?'Star — safe':pull>.65?'SPAGHETTIFICATION!':'Tidal forces!',stX,stY-stR/stretch-12,{fg:pull>.5?'#e8472a':'#7dd3fc',size:9});
+    if(pull>.05){ pill(ctx,`Time near BH: ${(Math.sqrt(Math.max(0,1-pull*.92))*100).toFixed(0)}% of normal`,bhX,h*.1,{fg:'#f5c842',size:10}); }
+  };
+  sync();
+})();
+
+/* ══════════════════════════════════════════════════
+   QUIZZES
+   ══════════════════════════════════════════════════ */
+const explanations={
+  q1t:"Correct! More thrust gets converted into mass via E = mc² rather than speed. The velocity addition formula ensures c is always out of reach.",
+  q1f:"Not quite! More energy gets you closer to c, but the math always prevents you from reaching it. Extra energy becomes mass, not more speed.",
+  q2t:"Right! At 99.9% c, γ ≈ 22.4. So 1 Earth year ÷ 22.4 ≈ 16 days of proper time on the rocket. Their clock, heartbeat, and aging all ran 22x slower.",
+  q2f:"Not quite! Time dilation is dramatic at 99.9% c. γ ≈ 22.4, so 1 Earth year feels like only ~16 days on board.",
+  q3t:"Exactly! At 99.9% c, γ ≈ 22.4. So 5 Sam-years × 22.4 ≈ 112 Earth years. Sam stepped off into the 22nd century barely aged.",
+  q3f:"Way more! γ at 99.9% c is ≈ 22.4. So 5 Sam-years = ~112 Earth years. That's a serious jump into the future.",
+  q4t:"Exactly! 1 gram fully converted gives ~9×10¹³ J — about 21.5 kilotons of TNT, comparable to the Hiroshima bomb (which only fissioned a fraction of its material).",
+  q4f:"Way more! E = mc² for 1 gram gives ~9×10¹³ joules — roughly 21.5 kilotons of TNT. The energy locked in everyday objects is staggering.",
+  q5t:"Correct! At the event horizon, escape speed = c. Since nothing goes faster than light, nothing escapes — ever. The black hole is genuinely black.",
+  q5f:"Not quite! At the event horizon, escape speed equals exactly c. Light cannot escape — it would need to go faster than c, which is impossible."
+};
+function quiz(id, btn, correct){
+  document.querySelectorAll(`#${id}opts .quiz-opt`).forEach(o=>{
+    o.disabled = true;
+    // reveal the right answer when the guess was wrong
+    if(!correct && o.getAttribute('onclick').includes('true')) o.classList.add('correct');
+  });
+  btn.classList.add(correct ? 'correct' : 'wrong');
+  const res = $(`${id}res`);
+  res.style.color = correct ? '#a3e635' : '#f87171';
+  res.textContent = (correct ? '✓ ' : '✗ ') + explanations[id + (correct ? 't' : 'f')];
+}
+
+/* ══════════════════════════════════════════════════
+   NAV, PROGRESS DOTS & SCROLL SPY
+   ══════════════════════════════════════════════════ */
+const sections = ['cover','speed','dilation','whytime','machine','twins','emc2','gravity','gravtime','blackhole'];
+
+function jumpTo(id){ $(id).scrollIntoView({behavior: reduceMotion ? 'auto' : 'smooth'}); }
+
+const navBtns = document.querySelectorAll('.nav-btn');
+navBtns.forEach(b => b.addEventListener('click', () => jumpTo(b.dataset.target)));
+
+const prog = $('progress');
+const dots = sections.map(id => {
+  const dot = document.createElement('button');
+  dot.className = 'prog-dot';
+  dot.title = id;
+  dot.tabIndex = -1;
+  dot.addEventListener('click', () => jumpTo(id));
+  prog.appendChild(dot);
+  return dot;
+});
+
+/* Track which section crosses the middle of the viewport —
+   works even when a section is taller than the screen. */
+const spy = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(!e.isIntersecting) return;
+    const idx = sections.indexOf(e.target.id);
+    dots.forEach((dot,i) => dot.classList.toggle('active', i === idx));
+    navBtns.forEach(b => b.classList.toggle('active', b.dataset.target === e.target.id));
+  });
+}, { rootMargin: '-40% 0px -55% 0px', threshold: 0 });
+
+sections.forEach(id => { const el = $(id); if(el) spy.observe(el); });
+
+/* ── boot ── */
+demos.forEach(d => { d.resize(); canvasObserver.observe(d.canvas); });
+/* redraw static frames once webfonts arrive (matters for reduced motion) */
+if(document.fonts && document.fonts.ready) document.fonts.ready.then(() => demos.forEach(d => d.renderOnce()));
+</script>
+</body>
+</html>
